@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ import io.github.dkocian.hipchatmessage.service.ParseMessageIntentService;
 import io.github.dkocian.hipchatmessage.util.Constants;
 import io.github.dkocian.hipchatmessage.util.Extras;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getName();
     public static final int INDENT_SPACES = 4;
     public static final String INPUT_LABEL = "Input: ";
@@ -37,9 +38,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String parsedMessage = intent.getStringExtra(Extras.PARSED_MESSAGE);
-            String message = intent.getStringExtra(Extras.MESSAGE);
-            tvOutput.setText(getFormattedString(message, parsedMessage));
+            String errorString = intent.getStringExtra(Extras.INTENT_SERVICE_ERROR);
+            if (errorString != null) {
+                Toast.makeText(MainActivity.this, errorString, Toast.LENGTH_SHORT).show();
+            } else {
+                String parsedMessage = intent.getStringExtra(Extras.PARSED_MESSAGE);
+                String message = intent.getStringExtra(Extras.MESSAGE);
+                tvOutput.setText(getFormattedString(message, parsedMessage));
+            }
         }
     };
 
@@ -68,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,  new IntentFilter(Constants.PARSE_ACTION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(Constants.PARSE_ACTION));
     }
 
     @Override

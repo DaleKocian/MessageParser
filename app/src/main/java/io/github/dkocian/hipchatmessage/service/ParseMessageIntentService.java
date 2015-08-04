@@ -62,7 +62,7 @@ public class ParseMessageIntentService extends IntentService {
 
     private void sendErrorBroadCast(JSONException e) {
         Intent broadcastIntent = new Intent();
-        broadcastIntent.putExtra(Extras.INTENT_SERVICE_ERROR, e);
+        broadcastIntent.putExtra(Extras.INTENT_SERVICE_ERROR, e.getMessage());
         broadcastIntent.setAction(Constants.PARSE_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
     }
@@ -79,7 +79,7 @@ public class ParseMessageIntentService extends IntentService {
                 jsonArrayEmoticons.put(m.group(EMOTICONS_PATTERN_INDEX));
             } else if (m.group(LINKS_PATTERN_INDEX) != null) {
                 String url = m.group(LINKS_PATTERN_INDEX);
-                if (m.group(4) == null) {
+                if (m.group(Constants.PROTOCOL_INDENTIFIER_INDEX) == null) {
                     url = Constants.HTTP + url;
                 }
                 requestTitle(url);
