@@ -1,0 +1,4 @@
+1) What to do about title and links object when internet isn't available?
+2) What to do about title and links object when website does not exist or does not have a title?
+3) What to do title and links object when user does not prepend url with http or https?
+4) what to do about repeat links, emojis, mentions in json output
